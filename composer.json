@@ -1,0 +1,14 @@
+{
+  "require" : {
+    "geocoder-php/google-maps-provider" :"*"
+  },
+  
+  "autoload" : {
+    "files" : ["config.php"]  
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}

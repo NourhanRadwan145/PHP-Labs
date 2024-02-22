@@ -1,3 +1,7 @@
+<?php
+require_once "vendor/autoload.php";
+require_once "functions.php";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,10 +47,26 @@
 
         // If all validations pass
         if (empty($nameErr) && empty($emailErr) && empty($messageErr)) {
-           die("Thank you for contacting us!<br>
-           Name: $name<br>
-           Email: $email<br>
-           Message: $message<br>");
+            session_start();
+            $view = isset($_GET["view"]) ? $_GET["view"] : default_view;
+            $first_request_time = isset($_SESSION["first_request_time"]) ? $_SESSION["first_request_time"] : date("Y-m-d H:i:s");
+            $_SESSION["first_request_time"] = $first_request_time;
+            echo "Hello, This visit started at $first_request_time <br>";
+            if ($view == "display") {
+                // Display all submissions immediately
+                display_all_submits();
+                die("<br> To add a new submission <a href='index.php?view=add'>Click Here</a>");
+            } else {
+                if (store_submit_to_file($name, $email, $message)) {
+                    die("Thank you for contacting us!<br>
+                        Name: $name<br>
+                        Email: $email<br>
+                        Message: $message<br>
+                        To view all submissions <a href='index.php?view=display'>Click Here</a>");
+                } else {
+                    die("Error saving contact.");
+                }
+            }
         }
     }
     ?>
